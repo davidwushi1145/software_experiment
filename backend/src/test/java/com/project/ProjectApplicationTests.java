@@ -1,19 +1,13 @@
 package com.project;
 
+import com.project.common.BaseResponse;
 import com.project.common.ErrorCode;
 import com.project.exception.BusinessException;
-import com.project.pojo.MyFile;
-import com.project.pojo.User;
+import com.project.pojo.*;
 import com.project.service.UserService;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 
 import java.io.IOException;
 
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -113,36 +107,67 @@ class ProjectApplicationTests {
      */
     @Test
     void testClient() {
-        String url = "http://139.155.127.29/example/";
-        Document doc;
-        try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "文件列表获取异常");
+        String accessKey = "4wa3gkaest05pmvubg1lmzca1i2k4jsb";
+        String secretKey = "l2hv1x2p6qqgwuiixxdw8wbsikdc5ggc";
+        SimpleChat simpleChat = new SimpleChat(accessKey, secretKey);
+        DevChatRequest devChatRequest = new DevChatRequest();
+        devChatRequest.setModelId(1661721207793340417L);
+        devChatRequest.setMessage("鱼皮");
+        BaseResponse<DevChatResponse> devChatResponseBaseResponse = simpleChat.doChat(devChatRequest);
+        DevChatResponse data = devChatResponseBaseResponse.getData();
+        System.out.println(devChatResponseBaseResponse);
+        if (data != null) {
+            String content = data.getContent();
+            System.out.println(content);
         }
-        Elements elements = doc.select("tr.tableRow");
-        List<MyFile> myFileList = new ArrayList<>();
-        for (Element element : elements) {
-            MyFile myFile = new MyFile();
+//        https://www.yucongming.com/model/1667385837890883585?inviteUser=1661721207793340417
+//        String url = "http://139.155.127.29/example/";
+//        Document doc;
+//        try {
+//            doc = Jsoup.connect(url).get();
+//        } catch (IOException e) {
+//            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "文件列表获取异常");
+//        }
+//        Elements elements = doc.select("tr.tableRow");
+//        List<MyFile> myFileList = new ArrayList<>();
+//        for (Element element : elements) {
+//            MyFile myFile = new MyFile();
+//
+//            String fileUrl = element.select(".stored-edit").get(0).attr("href");
+//            String fileName = element.select("span").first().text();
+//
+//            String downloadUrl = element.select(".downloadContentCellShift")
+//                    .select("a")
+//                    .attr("href");
+//            String deleteUrl = url + fileUrl;
+//
+//            int index = fileName.lastIndexOf(".");
+//            String type = fileName.substring(index + 1);
+//
+//            myFile.setFileName(fileName);
+//            myFile.setFileUrl(url + fileUrl);
+//            myFile.setFileType(type);
+//            myFile.setDownloadUrl(url + downloadUrl);
+//            myFile.setDeleteUrl(deleteUrl);
+//            System.out.println(myFile);
+//            myFileList.add(myFile);
+//        }
+    }
 
-            String fileUrl = element.select(".stored-edit").get(0).attr("href");
-            String fileName = element.select("span").first().text();
-
-            String downloadUrl = element.select(".downloadContentCellShift")
-                    .select("a")
-                    .attr("href");
-            String deleteUrl = url + fileUrl;
-
-            int index = fileName.lastIndexOf(".");
-            String type = fileName.substring(index + 1);
-
-            myFile.setFileName(fileName);
-            myFile.setFileUrl(url + fileUrl);
-            myFile.setFileType(type);
-            myFile.setDownloadUrl(url + downloadUrl);
-            myFile.setDeleteUrl(deleteUrl);
-            System.out.println(myFile);
-            myFileList.add(myFile);
+    @Test
+    void textChat(){
+        String accessKey = "4wa3gkaest05pmvubg1lmzca1i2k4jsb";
+        String secretKey = "l2hv1x2p6qqgwuiixxdw8wbsikdc5ggc";
+        SimpleChat simpleChat = new SimpleChat(accessKey, secretKey);
+        DevChatRequest devChatRequest = new DevChatRequest();
+        devChatRequest.setModelId(1667385837890883585L);
+        devChatRequest.setMessage("Java学习路线");
+        BaseResponse<DevChatResponse> devChatResponseBaseResponse = simpleChat.doChat(devChatRequest);
+        DevChatResponse data = devChatResponseBaseResponse.getData();
+        System.out.println(devChatResponseBaseResponse);
+        if (data != null) {
+            String content = data.getContent();
+            System.out.println(content);
         }
     }
 }
